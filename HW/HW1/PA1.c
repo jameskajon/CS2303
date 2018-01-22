@@ -13,13 +13,6 @@ int isLeapYear(int year) {
 
 /**
  * Calulates the day of the week January starts on for the given year.
- * Since each year has 365 days and 365%7=1 the day of the week would increase
- * by one every year (starting on Monday one year and Tuesday the next).
- * Since it happends that the year 0 would start on a Sunday and that is what I use
- * as zero, without leep years, the given year mod 7 would give the starting day.
- * With leep years, the amout of leep days between the year zero and the given
- * year must be added to the year. It's basicly count the days since Jannuary 1st
- * in the year 0 which was a Sunday and mod it by 7 (with a few shortcuts).
  * 
  * @param year the year to calculate for
  * @return the day of the week as an int (Sunday=0, Monday=1,...)
@@ -112,40 +105,57 @@ int printMonth (int year, int month, int startingWeekDay) {
     int days = printMonthName(year, month);   // number of days in the month
 
     printf("\nSun  Mon  Tue  Wed  Thu  Fri  Sat\n");    // print days of week lable
-
-    for (int indents = 0; indents < startingWeekDay; indents++) {
+    // Pre-condition: indent is 0 which would have to be less than startingWeekDay
+    for (int indent = 0; indent < startingWeekDay; indent++) {
+        // indent: the number indent that is will print to indent the first day of the month
         // indent the first day by 5 spaces per day of the week that already happended in that week
+        /* loop invariant : is true only if indents are needed. will eventualy terminate
+                when the number of indents done is equal to the id of the starting day*/
         printf("     ");
-    }
+    }   // for indent
+    // Post-condition: indent is equal to startingWeekDay
 
-    for (int d = 1; d <= days; d++) {
+    // Pre-condition: d is 1 which is less than or equal to days
+    for (int d = 1; d <= days; d++) {   // d: the curent date to print
         // generate days from 1 up to and including the number of days in the month
+        /* loop invariant : is initially true because each month has more than 0 days. 
+                will eventually terminate when the day is equal to the days in the month*/
         printf("%3d  ", d);     // print the date with formating
         if ((d + startingWeekDay) % 7 == 0) {   // split weeks by new lines
             printf("\n");
         }
-    }
+    }   // for d
+    // Post-condition: d is one greater than days
 
     printf("\n\n");
 
     return (days + startingWeekDay) % 7;
 }
 
-
-
-
-
-int printCalender(int year, int startingWeekDay) {
+/**
+ * Print out the calender of the given year
+ * 
+ * @param year the year the calender is for
+ * @param startingWeekDay the day of the week the year starts on (Sunday=0, Monday=0,...)
+ */
+void printCalender(int year, int startingWeekDay) {
 
     printf("\n\n   ***   CALENDAR for %d   ***\n\n", year);
-
-    for (int m = 0; m < 12; m++) {  // loops though months 0=Jan, 1=Feb, ...
+    // Pre-condition: m is zero which is less than the hardcoded 12
+    for (int m = 0; m < 12; m++) {  // m: the curent month to print
+        // loops though months 0=Jan, 1=Feb, ...
+        /* loop invariant : is initaly true because m is initialized to 0 and checked 
+                if less than 12. will stay true until m is 11 which represents December*/
         startingWeekDay = printMonth(year, m, startingWeekDay);
-    }
-    return 0;
+    }   // for m
+    // Post-condition: m is 12 which is not less the the hardcoded 12
 }
 
-
+/**
+ * Ask the user for a year. Exit if the year is invalid 
+ * else print the calender for the given year
+ * @return 0 to show the program executed without a problem
+ */
 int main(void) {
     int year;   // the year the user will input
 
